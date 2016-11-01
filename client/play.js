@@ -5,6 +5,7 @@ var main = function()
     var currentAnswer={};
     //start first question
     getNextQuestion();
+    getScore();
 
     /*****************************************************
         Upon click on next. it conects to server.
@@ -23,7 +24,7 @@ var main = function()
     $('#submit-answer').on('click', function ()
      {
 
-         currentAnswer.answer=$('#Answe').val();
+         currentAnswer.answer=$('#answer').val();
          currentAnswer.answerId=currentQuestion.answerId;
          console.log(currentQuestion);
          console.log( currentAnswer);
@@ -38,8 +39,7 @@ var main = function()
                     {
                         console.log(data);
 
-                        $('#Answe').val('');
-                        $('#question .questionAsked').remove();
+                        $('#answer').val('');
                         getScore();
                         getNextQuestion();
                     },
@@ -66,11 +66,15 @@ var main = function()
                     {
                         currentQuestion=responseQuestion;
                         $('#question .questionAsked').remove();
-                        $('#question').append('<span class= "questionAsked">'+currentQuestion.question+'</span>');
+                        $('#question').append('<span class= "w3-animate-right questionAsked">'+currentQuestion.question+'</span>');
                     }
                 });
       }
 
+    /*****************************************************
+      conects to server.
+           Retrieves and displays a score
+       ******************************************************/
       function getScore()
       {
           $.ajax({
