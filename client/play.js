@@ -1,32 +1,10 @@
-/* jshint browser: true, jquery: true, camelcase: true, indent: 2, undef: true, quotmark: single, maxlen: 80, trailing: true, curly: true, eqeqeq: true, forin: true, immed: true, latedef: true, newcap: true, nonew: true, unused: true, strict: true */
 var main = function()
 {
-  	'use strict';
     //local variable
     var currentQuestion={}; //stores the question to be showed
-
+    var currentAnswer={};
     //start first question
-    $.get('/question', function (questionaire)
-    {
-        currentQuestion=JSON.parse(questionaire);
-        $('#question').append('<span class= "questionAsked">'+ currentQuestion.question + '</span>');
-    });
-
-    /*****************************************************
-        Retrieves, displays, updates score from /score
-    ******************************************************/
-    setInterval(function()
-    {
-        $.get('/score', function (check)
-          {
-              $('#correct .correct-score').remove();
-              $('#incorrect .incorrect-score').remove();
-
-             $('#correct').append('<span class="correct-score">'+check.right+'</span>');
-             $('#incorrect').append('<span class="incorrect-score">'+check.wrong+'</span>');
-
-          });
-    },500);
+    getNextQuestion();
 
     /*****************************************************
         Upon click on next. it conects to server.
@@ -34,14 +12,8 @@ var main = function()
     ******************************************************/
     $('#next').on('click', function()
     {
-        $('#question .questionAsked').remove();
-        $.get('/question', function (questionaire)
-        {
-            currentQuestion=JSON.parse(questionaire);
-            $('#question').append('<span class= "questionAsked">'+currentQuestion.question+'</span>');
-        });
+        getNextQuestion();
     });
-
 
     /*****************************************************
         Upon click on submit-answer. it sends data from
@@ -50,26 +22,77 @@ var main = function()
     ******************************************************/
     $('#submit-answer').on('click', function ()
      {
-          var currentAnswer={};
-          currentAnswer.answer=$('#Answe').val();
-          currentAnswer.answerId=currentQuestion.answerId;
 
-          $.post('/answer', currentAnswer,function ()
-           {
-               console.log('passing:'+currentAnswer);
-          });
+         currentAnswer.answer=$('#Answe').val();
+         currentAnswer.answerId=currentQuestion.answerId;
+         console.log(currentQuestion);
+         console.log( currentAnswer);
 
-          $('#Answe').val('');
+         $.ajax({
+                    type: 'POST',
+                    contentType:'application/json',
+                    url: '/answer',
+                    data: JSON.stringify(currentAnswer),
+                    dataType:'json',
+                    success: function(data)
+                    {
+                        console.log(data);
 
-          $('#question .questionAsked').remove();
-          $.get('/question', function (questionaire)
-          {
-              currentQuestion=JSON.parse(questionaire);
-              $('#question').append('<span class= "questionAsked">'+currentQuestion.question+'</span>');
-          });
-
+                        $('#Answe').val('');
+                        $('#question .questionAsked').remove();
+                        getScore();
+                        getNextQuestion();
+                    },
+                    error:function (data)
+                    {
+                        console.log(data)
+                        console.log('ERROR');
+                    }
+               });
     });
-};
+
+    /*****************************************************
+        conects to server.
+         Retrieves and displays a question
+     ******************************************************/
+      function getNextQuestion()
+      {
+          $.ajax({
+                    type: 'GET',
+                    contentType:'application/json',
+                    url: '/question',
+                    dataType:'JSON',
+                    success: function(responseQuestion)
+                    {
+                        currentQuestion=responseQuestion;
+                        $('#question .questionAsked').remove();
+                        $('#question').append('<span class= "questionAsked">'+currentQuestion.question+'</span>');
+                    }
+                });
+      }
+
+      function getScore()
+      {
+          $.ajax({
+                    type: 'GET',
+                    contentType:'application/json',
+                    url: '/score',
+                    dataType:'JSON',
+                    success: function(check)
+                    {
+                          $('#correct .correct-score').remove();
+                          $('#incorrect .incorrect-score').remove();
+
+                          $('#correct').append('<span class="correct-score">'+check.right+'</span>');
+                          $('#incorrect').append('<span class="incorrect-score">'+check.wrong+'</span>');
+
+                    }
+
+                });
+      }
+}
+
+
 
 
 $(document).ready(main);
