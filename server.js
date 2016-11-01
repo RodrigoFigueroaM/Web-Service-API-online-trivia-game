@@ -15,7 +15,7 @@ var questionnaire;
 var answerId=0; //used so taht each question get a different Id
 var random;     //randomizes the question for user side
 var sendThisQuestion={}; //question to send
-var checkAnswer={}; // check client Answer will contain answer and id
+
 var score={};   // current score for player
 
 http.createServer(app).listen(3000);
@@ -47,7 +47,7 @@ function cleanColection(questionnaire)
  takes current db and loads some pregenerated
     questions
 ******************************************************/
-function loadSomeQuestions(questionnaire)
+function defaultQuestions(questionnaire)
 {
   	'use strict';
     questionnaire.insert({question:'Who was the first computer programmer?', answer:'Ada Lovelace', answerId:++answerId});
@@ -65,7 +65,7 @@ mongo.connect(url, function(err,db)
 
        questionnaire=db.collection('questionnaire');
        cleanColection(questionnaire);
-       loadSomeQuestions(questionnaire);
+       defaultQuestions(questionnaire);
 
        redis.set('right', 0);
        redis.set('wrong',0);
@@ -77,7 +77,7 @@ mongo.connect(url, function(err,db)
  ******************************************************/
 app.get('/',function(req,res)
     {
-      	'use strict';
+      	 'use strict';
           res.send(index.html);
     });
 
@@ -86,11 +86,14 @@ app.get('/',function(req,res)
     checks if the answer provided by the client is right
     if so increments right counter
     else increment wrong counter
+    sends counter for client to check answer
 ******************************************************/
 app.post('/answer',function(req,res)
     {
       	'use strict';
-        questionnaire.findOne({answerId:parseInt(req.body.answerId)},function (err, ans)
+        var checkAnswer={}; // check client Answer will contain answer and id
+        console.log(req.body);
+        questionnaire.findOne({answerId:req.body.answerId},function (err, ans)
             {
                 if(err)
                 {
@@ -109,25 +112,21 @@ app.post('/answer',function(req,res)
                           redis.incr('wrong');
                       }
                    }
+                   res.json(checkAnswer);
               });
     });
 
 /*****************************************************
        answer get route
-        sends an object for client to check answer
+
 ******************************************************/
-app.get('/answer',function(req,res)
-    {
-      			'use strict';
-            res.json(checkAnswer);
-    });
+
 
 /*****************************************************
            question get route
             sends a random qustion to client
 ******************************************************/
-app.route('/question')
-    .get(function(req,res)
+app.get('/question',function(req,res)
             {
               	'use strict';
                 random = Math.floor((Math.random() * answerId) + 1);
@@ -141,22 +140,25 @@ app.route('/question')
                      {
                          sendThisQuestion.question = askQuestion.question;
                          sendThisQuestion.answerId = askQuestion.answerId;
-                         res.send(JSON.stringify(sendThisQuestion));
+
+                         res.json(sendThisQuestion);
                      }
                 });
 
             })
+
 /*****************************************************
     question post route
     Gets a question and answer from client.
     it assigns an answerId from curent answerId counter
 ******************************************************/
-    .post(function(req,res)
+app.post('/question',function(req,res)
             {
-								'use strict';
-           		 	var newQuestion=req.body;
+						'use strict';
+                	var newQuestion= req.body;
                 		newQuestion.answerId= ++answerId;
                 		questionnaire.insert(newQuestion);
+                        res.status(201).end();
             });
 
 /*****************************************************
@@ -166,16 +168,18 @@ app.route('/question')
 ******************************************************/
 app.get('/score',function(req,res)
     {
+        //change to mget
       	'use strict';
         redis.get('right',function(err,value)
             {
                 score.right=value;
+                redis.get('wrong',function(err,value)
+                    {
+                        score.wrong=value;
+                        res.json(score);
+                    });
             });
-        redis.get('wrong',function(err,value)
-            {
-                score.wrong=value;
-            });
-        res.json(score);
+
     });
 
 
