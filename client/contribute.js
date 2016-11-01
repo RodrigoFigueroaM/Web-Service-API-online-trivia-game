@@ -13,13 +13,13 @@ var main = function()
         questionnaireUpdate.question=$('#question').val();
         questionnaireUpdate.answer=$('#answer').val();
 
-        $.post('/question', questionnaireUpdate, function ()
-         { });
-
-        $('#question').val('');
-        $('#answer').val('');
+        ajaxPost('/question',questionnaireUpdate, function()
+            {
+                $('#question').val('');
+                $('#answer').val('');
+            });
     });
-
 };
+
 
 $(document).ready(main);
