@@ -10,7 +10,7 @@ var ajaxPost= function ( url, data, successFunction)
           });
 }
 
-var ajaxGet= function ( url,data,successFunction)
+var ajaxGet= function ( url,successFunction)
 {
     $.ajax({
             type: 'GET',
