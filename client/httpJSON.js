@@ -9,10 +9,7 @@ var ajaxPost= function ( url, data, successFunction)
               url: url,
               data: JSON.stringify(data),
               dataType:'json',
-              success:function(data)
-              {
-              successFunction(data)
-            }
+              success:  successFunction(data)
           });
 }
 /*****************************************************
