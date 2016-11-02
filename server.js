@@ -13,9 +13,6 @@ var express = require('express'),
 //global variable
 var questionnaire;
 var answerId=0; //used so taht each question get a different Id
-var random;     //randomizes the question for user side
-var sendThisQuestion={}; //question to send
-
 var score={};   // current score for player
 
 http.createServer(app).listen(3000);
@@ -27,20 +24,23 @@ app.use(express.static(__dirname+'/client'));
      takes db and empties it outuppon complition displays
      Collection removed.
 *******************************************************/
-function cleanColection(questionnaire)
+function cleanColection(questionnaire, callback)
 {
   	'use strict';
     questionnaire.remove({},function (err, db)
  {
      if(err)
      {
-         console.log('Couldnt remove collection');
+         console.log('Couldn\'t remove collection');
      }
      else
       {
          console.log('Collection removed ');
      }
+
+     callback(questionnaire);
     });
+
 }
 
 /*****************************************************
@@ -63,10 +63,8 @@ mongo.connect(url, function(err,db)
  {
    		'use strict';
 
-       questionnaire=db.collection('questionnaire');
-       cleanColection(questionnaire);
-       defaultQuestions(questionnaire);
-
+       questionnaire = db.collection('questionnaire');
+       cleanColection(questionnaire, defaultQuestions);
        redis.set('right', 0);
        redis.set('wrong',0);
 
@@ -97,18 +95,18 @@ app.post('/answer',function(req,res)
             {
                 if(err)
                 {
-                    res.send('error');
+                    res.send('DB error');
                 }
                  else
                  {
                      if(req.body.answer===ans.answer)
                      {
-                         checkAnswer.correct=true;
+                         checkAnswer.correct='true';
                          redis.incr('right');
                       }
                       else
                       {
-                          checkAnswer.correct=false;
+                          checkAnswer.correct='false';
                           redis.incr('wrong');
                       }
                    }
@@ -116,10 +114,6 @@ app.post('/answer',function(req,res)
               });
     });
 
-/*****************************************************
-       answer get route
-
-******************************************************/
 
 
 /*****************************************************
@@ -128,6 +122,8 @@ app.post('/answer',function(req,res)
 ******************************************************/
 app.get('/question',function(req,res)
             {
+                var sendThisQuestion={}; //question to send
+                var random;     //randomizes the question for user side
               	'use strict';
                 random = Math.floor((Math.random() * answerId) + 1);
                 questionnaire.findOne({answerId:random},function (err, askQuestion)
@@ -146,7 +142,6 @@ app.get('/question',function(req,res)
                 });
 
             })
-
 /*****************************************************
     question post route
     Gets a question and answer from client.
@@ -158,6 +153,7 @@ app.post('/question',function(req,res)
                 	var newQuestion= req.body;
                 		newQuestion.answerId= ++answerId;
                 		questionnaire.insert(newQuestion);
+                        questionnaire.save(newQuestion);
                         res.status(201).end();
             });
 
@@ -170,14 +166,12 @@ app.get('/score',function(req,res)
     {
         //change to mget
       	'use strict';
-        redis.get('right',function(err,value)
+        redis.mget('right');
+        redis.mget(['right','wrong'],function(err,value)
             {
-                score.right=value;
-                redis.get('wrong',function(err,value)
-                    {
-                        score.wrong=value;
-                        res.json(score);
-                    });
+                score.right=value[0];
+                score.wrong=value[1];
+                res.json(score);
             });
 
     });
