@@ -1,3 +1,6 @@
+/*****************************************************
+    Simplified version of $.ajax  for POST
+ ******************************************************/
 var ajaxPost= function ( url, data, successFunction)
 {
     $.ajax({
@@ -5,11 +8,13 @@ var ajaxPost= function ( url, data, successFunction)
               contentType:'application/json',
               url: url,
               data: JSON.stringify(data),
-              success: successFunction(),
-              dataType:'json'
+              dataType:'json',
+              success:successFunction(data)
           });
 }
-
+/*****************************************************
+    Simplified version of $.ajax  for GET
+ ******************************************************/
 var ajaxGet= function ( url,successFunction)
 {
     $.ajax({
@@ -17,9 +22,9 @@ var ajaxGet= function ( url,successFunction)
             contentType:'application/json',
             url: url,
             dataType:'json',
-            success: function(data)
+            success:function (data)
             {
-                return data;
+                successFunction(data);
             }
 
           });
