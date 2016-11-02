@@ -14,10 +14,9 @@ var main = function()
         questionnaireUpdate.answer=$('#answer').val();
 
         ajaxPost('/question',questionnaireUpdate, function()
-            {
-                $('#question').val('');
-                $('#answer').val('');
-            });
+            {});
+            $('#question').val('');
+            $('#answer').val('');
     });
 };
 
