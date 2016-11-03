@@ -1,53 +1,77 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html class="no-js" lang="en">
     <head>
-        <link rel="stylesheet" href="http://www.w3schools.com/lib/w3.css">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
         <script src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
-        <title>Trivia API</title>
+        <link rel="stylesheet" type="text/css" href="semantic/dist/semantic.min.css">
+        <script src="semantic/dist/semantic.min.js"></script>
+        <!--  CSS -->
+        <link rel="stylesheet" type="text/css" href="style.css">
+         <title>Trivia Game </title>
     </head>
     <body>
-        <header>
-            <!-- Icon Bar (Sidenav - hidden on small screens) -->
-                 <nav class="w3-sidenav w3-padding-128 w3-margin-top w3-center w3-small w3-hide-small">
-                <!-- Avatar image in top left corner -->
-                <a class="w3-padding-large w3-hover-black" href="#">
-                    <i class="fa fa-gamepad w3-xxlarge"></i>
-                    <p>Play</p>
-                </a>
-                <a class="w3-padding-large w3-hover-black" href="submitQuestion.html">
-                    <i class="fa fa-pencil w3-xxlarge"></i>
-                    <p>Ask</p>
-                </a>
-                </nav>
 
-        </header>
+        <div class="ui middle aligned very padded grid">
 
-        <main>
-            <div class="w3-content  w3-padding-128   w3-text-grey" id ="question-container">
-                <h1 class="w3-jumbo">Let's play Trivia</h1>
-                    <div class="question-container">
-                        <h2 class="w3-large">Aswer other users questions. Try not to Google</h2>
-                        <div class="w3-panel w3-black w3-text-white w3-round-jumbo">
-                            <p class="w3-large" id= 'question'>Question: </p>
-                        </div>
-                        <p class="w3-small"><strong>Note:</strong> Answers to question are Case-sensitive  </p>
-                        <p><input class="w3-input w3-border w3-padding-16" id="answer" type="text" placeholder="Answer"></p>
-                        <p>
-                            <button class="w3-btn w3-gray w3-padding-large w3-hover-teal w3-round-large" id="submit-answer"> Submit</button>
-                            <button class="w3-btn w3-gray w3-padding-large w3-hover-pink w3-round-large" id="next">Skip</button>
-                        </p>
+            <div class="two wide  middle aligned content column">
+                <div class="ui vertical secondary labeled icon menu" id="menu">
+                    <a href="#" class=" item">
+                        <i class=" game icon"> </i>
+                         Play
+                    </a>
+                    <a href="submitQuestion.html" class="item">
+                        <i class=" write icon"></i>
+                        Ask
+                    </a>
+                </div>
+            </div>
+
+
+          <div class="eleven wide column">
+              <h1 class="ui header">Let's play Trivia</h1>
+              <p>Aswer other users questions. Try not to Google</p>
+              <div class="ui black message"  id= "question">
+                  Question:
+              </div>
+              <p><strong>Note:</strong> Answers to question are Case-sensitive</p>
+              <form class="ui form">
+                  <div class="fluid field">
+                      <input id="answer" type="text" placeholder="Answer">
+                  </div>
+                  <button  id="submit-answer" class="big ui button">
+                      Submit
+                  </button>
+                  <button id="next" class="big ui button">
+                      Skip
+                  </button>
+              </form>
+            </div>
+        </div>
+
+
+        <div  class="ui middle aligned center aligned grid">
+            <div class = "sixteen wide column" >
+                <div class="ui statistic">
+                    <div class="text value">
+                        Score
                     </div>
                 </div>
-                <div class="w3-content w3-center w3-text-grey w3-xxlarge" id ="score-container">
-                    <p class="w3-xxlarge">Score:
-                    <span class="w3-text-green" id="correct"><span class="correct-score"></span></span>
-                    <span class="w3-text-red " id="incorrect"><span class="incorrect-score"></span></span>
-                </p>
+                <div class = "four wide column" >
+                    <div class="ui large green  statistic" id="correct" >
+                        <div class="value" id ="correct-score" >
+
+                        </div>
+                    </div>
+                    <div class="ui large red statistic" id="incorrect">
+                        <div class="value"  id ="incorrect-score"  >
+                            
+                        </div>
+                    </div>
                 </div>
-        </main>
+            </div>
+        </div>
+
 
     </body>
-    <script src="httpJSON.js" ></script>
-    <script src="play.js" ></script>
+    <script src="play.js"></script>
+    <script src="httpJSON.js"></script>
 </html>

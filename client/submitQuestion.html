@@ -1,41 +1,51 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html class="no-js" lang="en">
     <head>
-        <link rel="stylesheet" href="http://www.w3schools.com/lib/w3.css">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
         <script src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
-        <title>Trivia API</title>
+        <link rel="stylesheet" type="text/css" href="semantic/dist/semantic.min.css">
+        <script src="semantic/dist/semantic.min.js"></script>
+        <!--  CSS -->
+        <link rel="stylesheet" type="text/css" href="style.css">
+         <title>Trivia Game </title>
     </head>
     <body>
-        <header>
-            <!-- Icon Bar (Sidenav - hidden on small screens) -->
-                 <nav class="w3-sidenav w3-padding-128 w3-margin-top w3-center w3-small w3-hide-small">
-                <!-- Avatar image in top left corner -->
-                <a class="w3-padding-large w3-hover-black" href="index.html">
-                    <i class="fa fa-gamepad w3-xxlarge"></i>
-                    <p>Play</p>
-                </a>
-                <a class="w3-padding-large w3-hover-black" href="#">
-                    <i class="fa fa-pencil w3-xxlarge"></i>
-                    <p>Ask</p>
-                </a>
-                </nav>
-        </header>
 
-        <main>
-            <div class="w3-content w3-padding-128 w3-text-grey" id ="add-question-container">
-                 <h1 class="w3-jumbo">Contibute to Trivia</h1>
-                 <div class="add-question">
-                    <h2> Input your own questions</h2>
-                    <p><input class="w3-input w3-border w3-padding-16" id="question" type="text" placeholder="Question"></p>
-                    <p><input class="w3-input w3-border w3-padding-16" id="answer" type="text" placeholder="Answer"></p>
-                    <p><button class="w3-btn w3-light-grey w3-padding-large w3-hover-grey" id="submit-question">SUBMIT QUESTION!</button></p>
+        <div class="ui middle aligned very padded grid">
+            <!-- menu-->
+            <div class="two wide  middle aligned content column">
+                <div class="ui vertical secondary labeled icon menu" id="menu">
+                    <a href="index.html" class=" item">
+                        <i class=" game icon"> </i>
+                         Play
+                    </a>
+                    <a href="#" class="item">
+                        <i class=" write icon"></i>
+                        Ask
+                    </a>
                 </div>
+            </div>
+
+            <!--input questions-->
+            <div class="eleven wide column">
+                  <h1 class="ui header">Contibute to Trivia</h1>
+                  <h2 class="ui header 3">Input your own questions.</h2>
+                  <p><strong>Note:</strong> Answers to question are Case-sensitive</p>
+                  <form class="ui form">
+                      <div class="fluid field">
+                          <input id="post-question" type="text" placeholder="Question?">
+                      </div>
+                      <div class="fluid field">
+                          <input id="answer" type="text" placeholder="Answer">
+                      </div>
+                      <button  id="submit-question" class="big ui button">
+                          Submit
+                      </button>
+                  </form>
                 </div>
-        </main>
+            </div>
 
 
     </body>
-    <script src="httpJSON.js" ></script>
-    <script src="contribute.js" ></script>
+    <script src="contribute.js"></script>
+    <script src="httpJSON.js"></script>
 </html>

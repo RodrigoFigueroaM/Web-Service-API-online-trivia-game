@@ -22,7 +22,7 @@ var main = function()
         it Retrieves and displays score from /score
     ******************************************************/
     $('#submit-answer').on('click', function ()
-     {
+     {console.log("ji");
         var currentAnswer={};
          currentAnswer.answer=$('#answer').val();
          currentAnswer.answerId=currentQuestion.answerId;
@@ -48,7 +48,11 @@ var updateQuestion = function(responseQuestion)
 {
     currentQuestion=responseQuestion;
     $('#question .questionAsked').remove();
-    $('#question').append('<span class= "w3-animate-right questionAsked">'+currentQuestion.question+'</span>');
+    $('#question').append('<span class= "questionAsked">'+currentQuestion.question+'</span>');
+    $(".questionAsked").hide();
+    $(".questionAsked").fadeIn(1200,function(){});//.show("slide", { direction: "left" }, 1500);
+
+
     return currentQuestion;
 };
 /*****************************************************
@@ -57,10 +61,12 @@ var updateQuestion = function(responseQuestion)
 ******************************************************/
 var updateScore = function (check)
 {
-    $('#correct .correct-score').remove();
-    $('#incorrect .incorrect-score').remove();
-    $('#correct').append('<span class="correct-score">'+check.right+'</span>');
-    $('#incorrect').append('<span class="incorrect-score">'+check.wrong+'</span>');
+        $('#correct').prepend('<div class="value" id ="correct-score" >'+check.right+ '</div>');
+        $('#incorrect').prepend('<div class="value" id ="incorrect-score" >'+check.wrong+ '</div>');
+        $('.incorrect-score').fadeIn();
+        $('.correct-score').fadeIn();
+
+
 };
 
 /*****************************************************

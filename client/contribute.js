@@ -10,12 +10,12 @@ var main = function()
     $('#submit-question').on('click', function()
     {
         var questionnaireUpdate={};
-        questionnaireUpdate.question=$('#question').val();
+        questionnaireUpdate.question=$('#post-question').val();
         questionnaireUpdate.answer=$('#answer').val();
 
         ajaxPost('/question',questionnaireUpdate, function()
             {});
-            $('#question').val('');
+            $('#post-question').val('');
             $('#answer').val('');
     });
 };
